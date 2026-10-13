@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# --- Catatan pribadi (jangan ikut ke GitHub) ---
+ai.md
+
 # --- Log ---
 *.log
 logs/
