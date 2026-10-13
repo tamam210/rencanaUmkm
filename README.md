@@ -121,6 +121,135 @@ Frontend jalan di **http://localhost:3000**
 
 ---
 
+## Tutorial: dari nol sampai bisa dipakai 🧭
+
+Ikuti urutannya. Tiap langkah ada "yang harusnya muncul" biar gampang dicek.
+
+### Bagian 1 — Menjalankan aplikasi
+
+1. Buka terminal, masuk ke folder proyek:
+   ```bash
+   cd RencanaUMKM
+   ```
+2. Jalankan:
+   ```bash
+   ./start.sh
+   ```
+3. Tunggu sampai muncul kotak seperti ini:
+   ```
+   ======================================================================
+     RencanaUMKM sedang jalan!
+
+       Web    : http://localhost:3000
+       Admin  : http://127.0.0.1:8000/admin
+       API    : http://127.0.0.1:8000/api/health/
+   ======================================================================
+   ```
+   > Biarkan terminal ini tetap terbuka — itu yang menjalankan server. Untuk berhenti: **Ctrl+C**.
+4. Buka browser ke **http://localhost:3000**
+
+### Bagian 2 — Jelajahi UMKM (seperti pembeli)
+
+1. Di beranda, klik tombol **"Jelajahi UMKM"** (atau langsung buka http://localhost:3000/umkm).
+2. Muncul daftar kartu UMKM, contohnya **Warung Kopi Sari**.
+3. **Cari:** di kotak _"Cari nama atau kata kunci…"_, ketik `kopi` → klik **Cari**.
+   → Hasilnya tinggal UMKM yang mengandung "kopi".
+4. **Filter kategori:** pilih mis. `Kuliner` di dropdown → **Cari**.
+5. **Filter harga:** pilih `Murah` → **Cari**. Filter bisa digabung sekaligus.
+6. **Kembalikan:** klik **Reset filter** untuk melihat semua lagi.
+7. **Buka profil:** klik salah satu kartu → masuk ke halaman profil,
+   mis. http://localhost:3000/umkm/warung-kopi-sari
+8. Di halaman profil:
+   - lihat deskripsi, lokasi, "Berdiri sejak", dan jumlah karyawan
+   - klik tombol hijau (Instagram / WhatsApp / Shopee) → terbuka di tab baru
+   - klik **"Bagikan link"** → link halaman tersalin, muncul tulisan **"Link disalin!"**.
+     Coba paste (Ctrl+V) di chat WhatsApp.
+9. **Tes sengaja salah:** cari `zzzz` → muncul _"Gak ada UMKM yang cocok."_
+   (Itu wajar — tandanya pencarian bekerja dengan benar.)
+
+### Bagian 3 — Kelola data sebagai admin
+
+Data baru (hasil impor atau pendaftaran) statusnya **Draft** — belum tampil di web publik
+sampai kamu verifikasi. Ini yang dikerjakan admin.
+
+1. Bikin akun admin (**sekali saja**):
+   ```bash
+   cd api
+   ./venv/bin/python manage.py createsuperuser
+   ```
+   Isi username, email (boleh dikosongkan), dan password.
+2. Buka http://127.0.0.1:8000/admin lalu login.
+3. Klik menu **UMKM** → daftar semua UMKM (termasuk yang masih draft).
+4. **Cari/filter:** pakai kotak pencarian dan panel filter di kanan
+   (Status, Kategori, Provinsi, Range harga). Coba filter **Status = Draft**.
+5. **Tambah manual:** klik **Add UMKM** di kanan atas → isi nama, kategori, deskripsi,
+   alamat, dst. Di bagian bawah ada **Links** untuk menambah Instagram/WhatsApp. Simpan.
+6. **Verifikasi massal:** centang beberapa UMKM → pilih aksi
+   **"Tandai sebagai terverifikasi"** → klik **Go**.
+7. Buka lagi http://localhost:3000/umkm → UMKM yang terverifikasi kini tampil. (Refresh kalau belum kelihatan.)
+8. Menu **Kategori** untuk menambah atau mengubah kategori usaha.
+
+### Bagian 4 — Impor data dari file (CSV/XLSX)
+
+Cocok untuk memasukkan data banyak sekaligus. Ada file contoh di proyek:
+**`datasets/contoh-umkm.csv`**.
+
+1. **Uji dulu (tidak menyimpan apa pun):**
+   ```bash
+   cd api
+   ./venv/bin/python manage.py impor_umkm ../datasets/contoh-umkm.csv \
+     --kota Pontianak --provinsi "Kalimantan Barat" --dry-run
+   ```
+   Yang muncul: daftar nama yang _"akan diimpor"_ beserta totalnya.
+2. Kalau sudah cocok, **impor sungguhan** (hapus `--dry-run`, tambahkan `--sumber`):
+   ```bash
+   ./venv/bin/python manage.py impor_umkm ../datasets/contoh-umkm.csv \
+     --kota Pontianak --provinsi "Kalimantan Barat" --sumber dataset:contoh
+   ```
+3. Cek di admin (http://127.0.0.1:8000/admin → **UMKM**). Semuanya masuk sebagai **Draft**.
+4. Lengkapi yang kurang (harga, tahun mulai, jumlah karyawan, link) lalu verifikasi —
+   caranya sama seperti Bagian 3.
+
+**Kalau punya file dataset sendiri**, importer akan menebak nama kolomnya otomatis.
+Nama kolom yang dikenali:
+
+| Field | Nama kolom yang diterima |
+|---|---|
+| Nama usaha | `nama usaha`, `nama`, `usaha`, `nama pemohon` |
+| Kategori | `kategori usaha`, `jenis usaha`, `bidang usaha`, `kategori` |
+| Alamat | `alamat usaha`, `alamat` |
+| Kelurahan | `kelurahan`, `desa`, `gampong` |
+| Kecamatan | `kecamatan` |
+| Kota | `kota`, `kabupaten` |
+| Provinsi | `provinsi` |
+| Deskripsi | `deskripsi`, `keterangan` |
+
+Kalau kolom kota/provinsi tidak ada di file, isi lewat `--kota` dan `--provinsi`
+seperti contoh di atas. Pakai `--dry-run` dulu untuk memastikan kolomnya kebaca.
+
+### Bagian 5 — Berhenti & jalan lagi
+
+| Mau | Perintah |
+|---|---|
+| Berhenti sementara | tekan **Ctrl+C** di terminal `./start.sh` |
+| Matikan semua (termasuk database) | `./stop.sh` |
+| Jalanin lagi | `./start.sh` |
+
+### Bagian 6 — Kalau ada masalah
+
+| Gejala | Sebab & solusi |
+|---|---|
+| Halaman/data gak muncul padahal kode benar | Dev server nyimpen cache lama → berhenti (Ctrl+C) lalu `./start.sh` lagi. |
+| `Address already in use` (port 3000/8000) | Server lama masih jalan → `./stop.sh` lalu `./start.sh`. |
+| Error koneksi database | Database belum siap → tunggu beberapa detik, atau cek `docker compose -f infra/docker-compose.yml ps`. |
+| Mau lihat pesan error detail | `tail -f /tmp/rencanaumkm-api.log /tmp/rencanaumkm-web.log` |
+| Lupa password admin | `cd api && ./venv/bin/python manage.py changepassword <username>` |
+
+> ℹ️ **Fitur rekomendasi AI belum ada.** Rencananya ditambahkan setelah server AI siap
+> (bisa pakai server sendiri/Ollama maupun layanan OpenAI-compatible). Bagian ini menyusul.
+
+---
+
 ## Perintah Berguna (dijalankan di `api/`)
 
 | Perintah | Fungsi |
