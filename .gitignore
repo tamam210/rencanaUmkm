@@ -1,0 +1,26 @@
+# --- Environment / rahasia ---
+.env
+.env.local
+.env.*.local
+
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+db.sqlite3
+staticfiles/
+
+# --- Node / Next.js / Expo ---
+node_modules/
+.next/
+out/
+dist/
+.expo/
+*.tsbuildinfo
+
+# --- Editor / OS ---
+.DS_Store
+.vscode/
+.idea/
