@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # aplikasi kita
     "core",
+    "umkm",
 ]
 
 MIDDLEWARE = [
