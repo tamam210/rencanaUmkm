@@ -3,6 +3,10 @@
 .env.local
 .env.*.local
 
+# --- Log ---
+*.log
+logs/
+
 # --- Python / Django ---
 __pycache__/
 *.py[cod]

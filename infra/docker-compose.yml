@@ -1,18 +1,25 @@
+# Kredensial dibaca dari environment. Kalau tidak diisi, nilai default
+# (khusus pengembangan lokal) yang dipakai. Untuk mengganti, salin
+# `infra/.env.example` menjadi `infra/.env` lalu isi nilainya.
 services:
   db:
     image: postgres:16-alpine
     container_name: sensory-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: sensory
-      POSTGRES_USER: sensory
-      POSTGRES_PASSWORD: sensory
+      POSTGRES_DB: ${POSTGRES_DB:-sensory}
+      POSTGRES_USER: ${POSTGRES_USER:-sensory}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sensory}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sensory -d sensory"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-sensory} -d ${POSTGRES_DB:-sensory}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,7 +29,7 @@ services:
     container_name: sensory-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redisdata:/data
 

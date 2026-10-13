@@ -34,6 +34,13 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", "django-insecure-dev-only-change-me")
 DEBUG = env_bool("DJANGO_DEBUG", True)
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 
+# Pengaman: jangan sampai jalan di produksi (DEBUG=False) dengan kunci contoh.
+if not DEBUG and SECRET_KEY == "django-insecure-dev-only-change-me":
+    raise RuntimeError(
+        "DJANGO_SECRET_KEY belum diisi. Set dulu di file .env sebelum "
+        "menjalankan dengan DJANGO_DEBUG=False."
+    )
+
 
 # --- Aplikasi ---
 INSTALLED_APPS = [

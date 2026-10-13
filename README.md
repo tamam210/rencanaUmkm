@@ -285,6 +285,31 @@ Filter daftar UMKM (bisa digabung): `?q=kopi`, `?kategori=kuliner`, `?harga=mura
 
 ---
 
+## Keamanan & File Rahasia 🔒
+
+File yang berisi rahasia **tidak boleh masuk GitHub**. Semuanya sudah diabaikan oleh
+`.gitignore`:
+
+| File | Isi | Status |
+|---|---|---|
+| `api/.env` | SECRET_KEY Django, kredensial database | diabaikan ✅ |
+| `web/.env.local` | Alamat API backend | diabaikan ✅ |
+| `infra/.env` | Kredensial database (opsional) | diabaikan ✅ |
+
+Yang **ikut di-commit** hanyalah file contoh tanpa rahasia:
+`api/.env.example`, `web/.env.example`, `infra/.env.example`.
+
+Cara memastikan (hasilnya harus _"DIABAIKAN"_):
+
+```bash
+git check-ignore -v api/.env web/.env.local infra/.env
+```
+
+Kalau suatu saat ada rahasia yang **terlanjur** ter-commit: ganti dulu nilainya
+(mis. buat `DJANGO_SECRET_KEY` baru), baru bersihkan dari riwayat Git.
+
+---
+
 ## Dokumentasi
 
 - [Rencana teknis](docs/rencanaumkm-rencana.md)

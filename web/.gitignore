@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (rahasia — jangan di-commit)
 .env*
+# kecuali template-nya, ini memang harus ikut supaya orang lain bisa menyalin
+!.env.example
 
 # vercel
 .vercel
