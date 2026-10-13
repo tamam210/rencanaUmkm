@@ -19,7 +19,26 @@ RencanaUMKM/
 
 ---
 
-## Cara Menjalankan (lokal)
+## Cara Cepat (satu perintah) ⚡
+
+Kalau males ngetik banyak, cukup:
+
+```bash
+./start.sh
+```
+
+Script ini otomatis: nyalain database → siapkan backend → isi data contoh (kalau kosong) →
+jalankan backend & frontend. Terus buka **http://localhost:3000**.
+
+- Berhenti: tekan **Ctrl+C**
+- Matikan semua (termasuk database): `./stop.sh`
+
+Butuh Docker, Python 3.11+, dan Node 20+ terinstall. Detail tiap langkah (buat yang mau manual)
+ada di bawah.
+
+---
+
+## Cara Menjalankan (manual, langkah demi langkah)
 
 ### 0. Prasyarat
 
